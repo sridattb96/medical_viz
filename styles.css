@@ -1,0 +1,17 @@
+.content {
+	width: 70%;
+	height: 500px;
+}
+
+.select {
+	width: 29%;
+	height: 500px;
+}
+
+body {
+	margin: 0 0 0 0;
+}
+
+.content, .select {
+	display: inline-block;
+}
