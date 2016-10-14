@@ -99,7 +99,6 @@ $(document).ready(function(){
 			params = getParams(query);
 			$('#dim1').val(params['dim1'])
 			$('#dim2').val(params['dim2'])
-			console.log(params)
 
 			xdata = [];
 			ydata = [];
@@ -108,15 +107,10 @@ $(document).ready(function(){
 				ydata.push(data[i][params['dim2']])
 			}
 
-			console.log(xdata)
-			console.log(ydata)
-
 			createScatter(xdata, ydata) 
 		}
 	})
 })
-
-var search = location.search.substring(1);
 
 // d3.csv("data/antimicrobial.csv", function(data) {
 //   // console.log(data[0]["Dose"]);
@@ -278,49 +272,49 @@ var search = location.search.substring(1);
 // });
 
 
-d3.csv("data/end_of_study.csv", function(data) {
-	count = 0;
-	withdrawal = 0;
-	for (var i = 0; i < data.length; i++){
-		if (data[i]["Cause of Death"]){
-			count++;
-		}
-		if (data[i]["Explain Withdrawal"]){
-			withdrawal++;
-		}
-	} 
-	console.log(count)
-	console.log(withdrawal)
-});
+// d3.csv("data/end_of_study.csv", function(data) {
+// 	count = 0;
+// 	withdrawal = 0;
+// 	for (var i = 0; i < data.length; i++){
+// 		if (data[i]["Cause of Death"]){
+// 			count++;
+// 		}
+// 		if (data[i]["Explain Withdrawal"]){
+// 			withdrawal++;
+// 		}
+// 	} 
+// 	console.log(count)
+// 	console.log(withdrawal)
+// });
 
-d3.csv("data/procedures.csv", function(data) {
+// d3.csv("data/procedures.csv", function(data) {
 
-	// number of people undergoing each particular procedure
-	var patients = {};
-	var procedures = {};
-	for (var i = 0; i < data.length; i++){
-		var pid = data[i]["Pt ID"];
-		if (!patients[pid]){
-			patients[pid] = {}
-		}
-		var arr = data[i]["Procedures"].split(',');
-		for (var j = 0; j < arr.length; j++){
-			proc = arr[j];
-			if (!patients[pid][proc]){
-				patients[pid][proc] = true;
-			}
-			if (!procedures[proc]){
-				procedures[proc] = 0;
-			}
-		}
-	}
+// 	// number of people undergoing each particular procedure
+// 	var patients = {};
+// 	var procedures = {};
+// 	for (var i = 0; i < data.length; i++){
+// 		var pid = data[i]["Pt ID"];
+// 		if (!patients[pid]){
+// 			patients[pid] = {}
+// 		}
+// 		var arr = data[i]["Procedures"].split(',');
+// 		for (var j = 0; j < arr.length; j++){
+// 			proc = arr[j];
+// 			if (!patients[pid][proc]){
+// 				patients[pid][proc] = true;
+// 			}
+// 			if (!procedures[proc]){
+// 				procedures[proc] = 0;
+// 			}
+// 		}
+// 	}
 
-	for (var p in patients){
-		for (var proc in patients[p]){
-			procedures[proc]++;
-		}
-	}
+// 	for (var p in patients){
+// 		for (var proc in patients[p]){
+// 			procedures[proc]++;
+// 		}
+// 	}
 
-	console.log(procedures)
+// 	console.log(procedures)
 
-});
+// });
