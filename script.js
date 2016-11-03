@@ -2,8 +2,7 @@
 
 $(document).ready(function(){
 
-	String.prototype.replaceAll = function(str1, str2, ignore) 
-	{
+	String.prototype.replaceAll = function(str1, str2, ignore){
 	    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
 	} 
 
@@ -14,12 +13,102 @@ $(document).ready(function(){
 		return JSON.parse(res);
 	}
 
-	function createScatter(xdata, ydata){
+	function graphColor(val){
+
+	}
+
+	function graphTBSA(row){
+
+		var partial = row["Partial TBSA"]
+		var full = row["Full TBSA"]
+		var tot = row["Tot TBSA"]
+
+		var backgroundColor = []
+		if (partial < 15) {
+			backgroundColor.push('rgba(54, 162, 235, 0.2)') // blue
+		} else if (partial < 25) {
+			backgroundColor.push('rgba(75, 192, 192, 0.2)') // green 
+		} else {
+			backgroundColor.push('rgba(255, 99, 132, 0.2)') // red
+		}
+
+		if (full < 20) {
+			backgroundColor.push('rgba(54, 162, 235, 0.2)')
+		} else if (full < 40) {
+			backgroundColor.push('rgba(75, 192, 192, 0.2)')
+		} else {
+			backgroundColor.push('rgba(255, 99, 132, 0.2)')
+		}
+
+		if (tot < 20) {
+			backgroundColor.push('rgba(54, 162, 235, 0.2)')
+		} else if (tot < 40) {
+			backgroundColor.push('rgba(75, 192, 192, 0.2)')
+		} else {
+			backgroundColor.push('rgba(255, 99, 132, 0.2)')
+		}
+
+		var ctx = document.getElementById("myChart");
+		var myChart = new Chart(ctx, {
+		    type: 'bar',
+		    data: {
+		        labels: ["Partial TBSA", "Full TBSA", "Tot TBSA"],
+		        datasets: [{
+		            label: 'Patient TBSA Records',
+		            data: [partial, full, tot],
+		            backgroundColor: backgroundColor,
+		            // borderColor: [
+		            //     'rgba(255,99,132,1)',
+		            //     'rgba(54, 162, 235, 1)',
+		            //     'rgba(75, 192, 192, 1)',
+		            // ],
+		            borderWidth: 1
+		        }]
+		    },
+		    options: {
+		        scales: {
+		            yAxes: [{
+		                ticks: {
+		                    beginAtZero:true
+		                }
+		            }]
+		        }
+		    }
+		});
+	}
+
+	function openModal(row){
+		console.log(row)
+		$('.modal-title').html("Patient " + row["Pt Id"])
+
+		$('#admit-date').html(row["Admit Date"])
+		$('#enroll-date').html(row["Enroll Date"])
+		$('#group').html(row["Group"])
+		$('#weight').html(row["Weight"])
+		$('#hr').html(row["HR"])
+		$('#bp-systolic').html(row["BP Systolic"])
+		$('#bp-diastolic').html(row["BP Dyastolic"])
+
+		var med = row["Past Medical"].replaceAll("[", "").replace("]", "")
+		$('#past-medical').html(med)
+		
+		if (row["Other Illness"].length > 0){
+			$('#illness').html(row["Other Illness"])
+		} else {
+			$('#illness').html("None")
+		}
+
+		$('#myModal').modal('show');
+
+		graphTBSA(row)
+	}
+
+	function createScatter(data, xdata, ydata, pid){
 
 		// size and margins for the chart
 		var margin = {top: 20, right: 15, bottom: 60, left: 60}
-		  , width = 960 - margin.left - margin.right
-		  , height = 500 - margin.top - margin.bottom;
+		  , width = 600 - margin.left - margin.right
+		  , height = 325 - margin.top - margin.bottom;
 
 		// x and y scales, I've used linear here but there are other options
 		// the scales translate data values to pixel values for you
@@ -35,7 +124,7 @@ $(document).ready(function(){
 
 
 		// the chart object, includes all margins
-		var chart = d3.select('.content')
+		var chart = d3.select('#graph-1')
 		.append('svg:svg')
 		.attr('width', width + margin.right + margin.left)
 		.attr('height', height + margin.top + margin.bottom)
@@ -76,9 +165,53 @@ $(document).ready(function(){
 		  .enter().append("svg:circle")  // create a new circle for each value
 		      .attr("cy", function (d) { return y(d); } ) // translate y value to a pixel
 		      .attr("cx", function (d,i) { return x(xdata[i]); } ) // translate x value
+		      .attr("id", function (d,i) { return pid[i]; } ) // translate x value
 		      .attr("r", 5) // radius of circle
-		      .style("opacity", 0.6); // opacity of circle
+		      .style("opacity", 0.6) // opacity of circle
+		      .on("mouseover", function(d){
+		      	d3.select(this).style("cursor", "pointer");
+		      	d3.select(this).style("background-color", "#ff3232");
+		      })
+		      .on("click", function(d, i){
+      				openModal(data[i])
+      			});
+
+		// 
+
 	}
+
+	// function loadInput(dataset){
+	// 	d3.csv("data/" + dataset + ".csv", function(data) {
+
+	// 		// Load dimension options
+	// 		dims = Object.keys(data[0]);
+
+	// 		for (var i = 0; i < dims.length; i++){
+	// 			if (!isNaN(data[0][dims[i]])){
+	// 				var option = $('<option value="' + dims[i] + '">' + dims[i] + '</option>');
+	// 				$('#dim1').append(option);
+	// 				var option = $('<option value="' + dims[i] + '">' + dims[i] + '</option>');
+	// 				$('#dim2').append(option);
+	// 			}
+	// 		}
+
+	// 		var query = window.location.search.substr(1);
+	// 		if (query.length > 0){
+	// 			params = getParams(query);
+	// 			$('#dim1').val(params['dim1'])
+	// 			$('#dim2').val(params['dim2'])
+
+	// 			xdata = [];
+	// 			ydata = [];
+	// 			for (var i = 0; i < data.length; i++){
+	// 				xdata.push(data[i][params['dim1']])
+	// 				ydata.push(data[i][params['dim2']])
+	// 			}
+
+	// 			createScatter(xdata, ydata) 
+	// 		}
+	// 	})
+	// }
 
 	d3.csv("data/enrollment.csv", function(data) {
 
@@ -102,14 +235,26 @@ $(document).ready(function(){
 
 			xdata = [];
 			ydata = [];
+			pid = [];
 			for (var i = 0; i < data.length; i++){
 				xdata.push(data[i][params['dim1']])
 				ydata.push(data[i][params['dim2']])
+				pid.push(data[i]["Pt Id"])
 			}
 
-			createScatter(xdata, ydata) 
+			createScatter(data, xdata, ydata, pid) 
 		}
 	})
+
+	// var query = window.location.search.substr(1);
+	// params = getParams(query)
+	// loadInput(params["dataset"])
+
+	$('#dataset').change(function(){23
+		alert("hello")
+	})
+
+
 })
 
 // d3.csv("data/antimicrobial.csv", function(data) {

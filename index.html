@@ -4,26 +4,74 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<script src="https://d3js.org/d3.v4.min.js"></script>
 		<script type="text/javascript" src="http://mbostock.github.com/d3/d3.v2.js" charset="utf-8"></script>
+		<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js" charset="utf-8"></script>
 		<script src="script.js"></script>
+		<link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="styles.css">
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	</head>
 	<body>
-		<div class='content'>
+		<div class='col-md-9 content'>
+			<h1 id="main-title"> MEDICAL DATA VISUALIZATION </h1>
+			<div id="graph-1"></div>
 		</div>
-		<div class="select">
+		<div class="col-md-3 select">
+			<h1 id="toolbar-title">TOOLBAR</h1>
 			<form>
+				<h3 class="input-label"> TABLE </h3>
 				<select name="dataset" id="dataset">
-					<option value="volvo">Subject</option>
-					<option value="saab">Saab</option>
-					<option value="mercedes">Mercedes</option>
-					<option value="audi">Audi</option>
+
+<!-- 					<option value="analysis">Analysis</option>
+					<option value="daily_vitals">Daily Vitals</option> -->
+					
+					<option value="enrollment">Enrollment</option>
+					<!-- <option value="sample">Sample</option> -->
 				</select>
+				<h3 class="input-label"> Dimension Y </h3>
 				<select name="dim1" id="dim1">
 				</select>
+				<h3 class="input-label"> Dimension X </h3>
 				<select name="dim2" id="dim2">
 				</select>
-				<input type="submit" value="Submit">
+				<input id="submit" type="submit" value="Submit">
 			</form>
 		</div>
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" role="dialog">
+		  <div class="modal-dialog">
+		  
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		        <h4 class="modal-title">Modal Header</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p class="key">Admit Date: </p> <p class="val" id="admit-date"> asdfasdf </p> <br>
+		        <p class="key">Enroll Date: </p> <p class="val" id="enroll-date">  </p> <br>
+		        <br> 
+		        <p class="key">Group: </p> <p class="val" id="group">  </p> <br>
+		        <p class="key">Weight: </p> <p class="val" id="weight">  </p> <br>
+		        <p class="key">HR: </p> <p class="val" id="hr">  </p> <br>
+		        <p class="key">BP Systolic: </p> <p class="val" id="bp-systolic">  </p> <br>
+		        <p class="key">BP Diastolic: </p> <p class="val" id="bp-diastolic">  </p> <br>
+		        <p class="key">Past Medical: </p> <p class="val" id="past-medical">  </p> <br>
+		        <p class="key">Illness: </p> <p class="val" id="illness"> </p> <br>
+
+
+		        <canvas id="myChart" width="100" height="100"></canvas>
+
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		    
+		  </div>
+		</div>
+
+
 	</body>
 </html>
